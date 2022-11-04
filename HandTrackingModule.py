@@ -22,13 +22,15 @@ class handDetector:
     def findHands(self, img, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         self.results = self.hands.process(imgRGB)
-        # print(results.multi_hand_landmarks)
+
+        # print(self.results.multi_hand_landmarks)
+        # exit(0)
 
         if self.results.multi_hand_landmarks:
             for handLms in self.results.multi_hand_landmarks:
+                # print(handLms,"hellos")
                 if draw:
-                    self.mpDraw.draw_landmarks(img, handLms,
-                                               self.mpHands.HAND_CONNECTIONS)
+                    self.mpDraw.draw_landmarks(img, handLms,self.mpHands.HAND_CONNECTIONS)
 
         return img
 
@@ -96,8 +98,7 @@ class handDetector:
 
 
 def main():
-    pTime = 0
-    cTime = 0
+
     cap = cv2.VideoCapture(0)
     detector = handDetector()
     while True:
@@ -107,12 +108,6 @@ def main():
         lmList, bbox = detector.findPosition(img)
         if len(lmList) != 0:
             print(lmList[4])
-
-        cTime = time.time()
-        fps = 1 / (cTime - pTime)
-        pTime = cTime
-        # fing=detector.fingersUp()
-        cv2.putText(img, str(int(fps)), (10, 70), cv2.FONT_HERSHEY_PLAIN, 3, (255, 0, 255), 3)
 
         cv2.imshow("Image", img)
         cv2.waitKey(1)
